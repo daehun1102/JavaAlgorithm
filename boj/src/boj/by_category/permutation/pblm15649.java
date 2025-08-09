@@ -1,3 +1,4 @@
+package boj.by_category.permutation;
 import java.util.Scanner;
 
 public class pblm15649 {
