@@ -17,6 +17,7 @@ public class pblm15649 {
     isSelected = new boolean[N + 1];
     myPermutation(0);
     System.out.print(sb);
+    sc.close();
   }
 
   static void myPermutation(int cnt) {

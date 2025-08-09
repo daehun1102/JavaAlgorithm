@@ -9,5 +9,6 @@ public class pblm10998 {
         int m = sc.nextInt();
 
         System.out.println(n*m);
+        sc.close();
     }
 }

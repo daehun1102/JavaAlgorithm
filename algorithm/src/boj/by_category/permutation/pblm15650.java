@@ -19,6 +19,7 @@ public class pblm15650 {
     selectedArray = new int[selectLimit];
     myPermutation(0, 0); 
     System.out.print(sb);
+    sc.close();
   }
 
   // 2. 순열 함수를 구현한다.
