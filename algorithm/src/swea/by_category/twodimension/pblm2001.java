@@ -1,4 +1,4 @@
-package swea.by_category.twodimention;
+package swea.by_category.twodimension;
 /**
  * 1. 테스트케이스 개수를 받는다.
  * 2. 파리맵 배열의 크기와 파리채 크기가 주어진다.

@@ -1,4 +1,4 @@
-package swea.by_category.twodimention;
+package swea.by_category.twodimension;
 
 import java.io.*;
 import java.util.*;
