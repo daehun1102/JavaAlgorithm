@@ -1,3 +1,5 @@
+package swea.by_category;
+
 import java.util.Scanner;
 
 /**
