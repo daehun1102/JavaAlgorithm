@@ -1,4 +1,4 @@
-package swea.by_category;
+package swea.by_category.graph;
 /**
  * 문제 개요
  * 1. 방향 그래프가 들어오면,
@@ -23,7 +23,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
