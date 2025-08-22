@@ -1,4 +1,4 @@
-package swea.by_category;
+package swea.by_category.twodimension;
 
 import java.io.BufferedReader;
 import java.io.IOException;
