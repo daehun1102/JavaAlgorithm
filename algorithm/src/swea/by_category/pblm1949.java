@@ -76,7 +76,6 @@ public class pblm1949 {
 			highestMountains = new ArrayList<>();
 			// 3-1. 최대 봉우리는 인덱스를 기록 해둔다.
 			for (int row = 0; row < mapSize; row++) {
-				st = new StringTokenizer(br.readLine().trim());
 				for (int col = 0; col < mapSize; col++) {
 					if (map[row][col] == maxValue) {
 						highestMountains.add(new int[]{row,col});
@@ -85,13 +84,15 @@ public class pblm1949 {
 			}
 			
 			maxLen = 0;
+			
 			//4. 최대봉우리를 시작으로 dfs
 			for (int[] mountainIndex : highestMountains) {
 				int mountainRow = mountainIndex[0];
 				int mountainCol = mountainIndex[1];
 				for (int row = 0; row < mapSize; row++) {
 					for (int col = 0; col < mapSize; col++) {
-						for (int diffHeight = 1; diffHeight <= maxDeep ; diffHeight++) {
+						for (int diffHeight = 0; diffHeight <= maxDeep ; diffHeight++) {
+							visited = new boolean[mapSize][mapSize];
 							map[row][col] -= diffHeight;
 							dfs(mountainRow, mountainCol, 1);
 							map[row][col] += diffHeight;
@@ -104,22 +105,20 @@ public class pblm1949 {
 		}
 	}
 
-	public static boolean dfs(int row, int col, int depth) {
-		for (int deltaIndex = 0; deltaIndex < 4; deltaIndex++) {
-			int newRow = row + deltaRow[deltaIndex];
-			int newCol = col + deltaCol[deltaIndex];
-			if (newRow < 0 || newRow >= mapSize || newCol < 0 || newCol >= mapSize)
-				continue;
-			if (visited[newRow][newCol])
-				continue;
-			if (!dfs(newRow, newCol, depth + 1)) {
-				maxLen = Math.max(maxLen, depth + 1);
-				return true;
-			}
-			visited[newRow][newCol] = true;
-			dfs(newRow, newCol, depth + 1);
-			visited[newRow][newCol] = false;
-		}
-		return false;
-	}
+	public static void dfs(int row, int col, int depth) {
+        maxLen = Math.max(maxLen, depth);
+
+        for (int d = 0; d < 4; d++) {
+            int newRow = row + deltaRow[d];
+            int newCol = col + deltaCol[d];
+
+            if (newRow < 0 || newRow >= mapSize || newCol < 0 || newCol >= mapSize) continue;
+            if (visited[newRow][newCol]) continue;
+            if (map[newRow][newCol] >= map[row][col]) continue;
+
+            visited[newRow][newCol] = true;
+            dfs(newRow, newCol, depth + 1);
+            visited[newRow][newCol] = false;
+        }
+    }
 }
