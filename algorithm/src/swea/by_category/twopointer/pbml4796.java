@@ -1,4 +1,4 @@
-package swea.by_category;
+package swea.by_category.twopointer;
 
 import java.util.Scanner;
 
