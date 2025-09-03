@@ -2,7 +2,7 @@ package swea.by_category.ssafy_a;
 import java.io.*;
 import java.util.*;
 
-public class MountainWalking_Solution {
+public class pblm20505 {
     static int H, W;
     static int[][] map;
     static int[][] dist; // 각 좌표까지 도달하는 '최소 난이도'를 저장 (최대 점프 높이)
