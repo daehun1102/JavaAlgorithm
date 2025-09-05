@@ -19,7 +19,7 @@ public class pblm14502 {
     static int[][] map;
     static int[][] copyMap;
     static int height,width;
-    static int minResult;
+    static int maxResult;
 
     static int[] deltaRow = {0,0,1,-1};
     static int[] deltaCol = {1,-1,0,0};
@@ -30,7 +30,8 @@ public class pblm14502 {
         width = Integer.parseInt(st.nextToken());
         map = new int[height][width];
         copyMap = new int[height][width];
-        minResult = 0;
+        maxResult = Integer.MIN_VALUE;
+
         // 맵을 받자
         for (int row = 0; row < height; row++) {
             st = new StringTokenizer(br.readLine().trim());
@@ -40,23 +41,26 @@ public class pblm14502 {
         }
         
         
-        // 좌표를 선택하자
+        // 벽을 세울 좌표를 선택하자
         dfs(0);
 
-        System.out.println(minResult);
+        // 최솟값을 출력
+        System.out.println(maxResult);
     }
+
     public static void dfs(int depth) {
         if (depth == 3){
-            // 3개를 다 선택했다면 바이러스 퍼뜨려서 갱신
+            // 이미 3개를 다 선택했다면 바이러스 퍼뜨려서 최대값 갱신
             int tmpResult = bfs();
-            minResult = Math.min(tmpResult, minResult);
+            maxResult = Math.max(tmpResult, maxResult);
+            return;
         }
 
         // 3개 이전이라면 맵돌면서 0 인곳에 설치
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 if (map[row][col] == 0) {
-                    // 설치하고 다음거 탐색
+                    // 설치하고 다음 벽을 놓자
                     map[row][col] = 1;
                     dfs(depth+1);
 
@@ -70,7 +74,7 @@ public class pblm14502 {
     public static int bfs(){
         int safePoint = 0;
         Deque<int[]> queue = new ArrayDeque<>();
-        // dfs 사용할 맵 카피
+        // 바이러스 퍼뜨릴때 사용할 현재맵 카피
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 copyMap[i][j] = map[i][j];
@@ -94,7 +98,7 @@ public class pblm14502 {
                 int newRow = curRow + deltaRow[deltaIndex];
                 int newCol = curCol + deltaCol[deltaIndex];
                 if (newRow < 0 || newCol < 0 || newRow >= height || newCol >= width) continue;
-                if (copyMap[newRow][newCol] == 0) {
+                if (copyMap[newRow][newCol] == 0) { // 0인 곳에만 퍼뜨린다.
                     copyMap[newRow][newCol] = 2;
                     queue.offer(new int[]{newRow,newCol});
                 }
