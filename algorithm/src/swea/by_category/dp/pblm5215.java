@@ -1,24 +1,58 @@
 package swea.by_category.dp;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
 /**
- * 햄버거 다이어트 - DP
- * DP 는 큰문제를 작은문제로 나누는 것이다.
- * 이 문제는 "햄버거 재료 중 칼로리를 넘지 않고, 가장 최고의 맛점수를 만들 수 있는 조합을 찾는것이다."
- * 똑같은 뜻이지만 약간 다르게보면, 
- * 큰문제는 "햄버거 재료 0 개를 고를지 말지 선택하고, 남은 칼로리 제한이 L일때, 얻을 수 있는 최대 맛점수"
- * 작은 문제는 "햄버거 재료 1개를 고를지 말지 선택하고, 남은 칼로리 제한이 L-w 일때, 얻을 수 있는 최대 맛점수"
- * ... 제일 작은 문제는 "햄버거 재료를 N-1개를 고를지 말지 선택하고, 남은 칼로리 제한이 L-w1-w4... 일때, 얻을 수 있는 최대 맛점수"
- * 가 된다.
- * 제일 작은 문제의 최적해를 구해보면,
- * 일단 상황은 재료가 1개로 마지막 재료가 남은것이다.
- * 재료를 골랐을때 칼로리 제한이 넘어가면 선택하면 안되고,
- * 마지막 재료를 골랐을때와 안골랐을때 최대값을 구한다.
- * 
- * dp[i][c] -> i개 결정했고 칼로리 제한은 w가 남은 상황
- * dp[i][c] = max( dp[i-1][c] , dp[i-1][w-calories[c]] + score[i]]) 
- * i 번째 물건을 선택한것과 안한것의 최대값을 구하면 된다.
+ * 1. dp 로 풀이
+ * dp[c]의 의미: 현재까지 고려한 재료들을 사용하여 
+ * 칼로리 합이 c일 때 얻을 수 있는 최대 맛 점수
  */
 public class pblm5215 {
-    
+    static BufferedReader br;
+    static StringTokenizer st;
+    static StringBuilder sb;
+    static int foodNum, calLimit;
+    static int[][] foodInfo;
+    public static void main(String[] args) throws IOException {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        int testCaseNum = Integer.parseInt(br.readLine().trim());
+        for (int testCase = 1; testCase <= testCaseNum; testCase++) {
+            st = new StringTokenizer(br.readLine().trim());
+            foodNum = Integer.parseInt(st.nextToken());
+            calLimit = Integer.parseInt(st.nextToken());
+            foodInfo = new int[foodNum][2];
+            for (int foodIndex = 0; foodIndex < foodNum; foodIndex++) {
+                st = new StringTokenizer(br.readLine().trim());
+                // 맛점수
+                foodInfo[foodIndex][0] = Integer.parseInt(st.nextToken());
+                // 칼로리
+                foodInfo[foodIndex][1] = Integer.parseInt(st.nextToken());
+            }
+            // 
+            int[] dp = new int[calLimit+1];
+
+            for (int foodIndex = 0; foodIndex < foodNum; foodIndex++) {
+                int taste = foodInfo[foodIndex][0];
+                int calorie = foodInfo[foodIndex][1];
+                for (int c = calLimit; c >= calorie; c--) {
+
+                    // 현재 재료 포함하지 않았을때, 했을때 최댓값 연산
+                    dp[c] = Math.max(dp[c], dp[c-calorie] + taste);
+                } 
+                // 테스트용
+                // System.out.println(Arrays.toString(dp));
+            }
+
+            sb = new StringBuilder();
+            sb.append('#').append(testCase).append(' ').append(dp[calLimit]);
+            System.out.println(sb);
+        }
+        
+
+    }
     
 }
