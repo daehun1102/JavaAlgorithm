@@ -15,11 +15,10 @@ import java.util.StringTokenizer;
  * 1. 본인의 키순서를 알기위해선 N-1 번 만큼의 키비교를 해봐야한다.
  * 2. 하지만 간선의 일부만 주어지기 때문에,
  * 3. 본인의 앞과 뒤에 몇명의 학생이 있는지 알아야한다.
+ * 4. 인접행렬의 '행'을 통해서 앞에 있는 학생수, '열'을 통해서 뒤에 있는 학생수를 구한다.
  * 
- * 리팩토링
- * 1. 메모이제이션
  */
-public class pblm2458 {
+public class pblm5643 {
     static int node,edge,adj[][], radj[][];
     static int count;
     public static void main(String[] args) throws IOException {

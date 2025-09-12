@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 /**
@@ -39,10 +41,11 @@ public class pblm2383 {
     static int map[][], mapSize, peopleNum, peopleArray[][];
     static List<int[]> peopleInfoList; // 사람마다 두개의 입구까지의 거리등록
     static List<int[]> stairInfoList; // 계단 좌표, 길이
+    static int bestAnswer;
 
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
-
+        sb = new StringBuilder();
         int testCaseNum = Integer.parseInt(br.readLine().trim());
         for (int testCase = 1; testCase <= testCaseNum; testCase++) {
             mapSize = Integer.parseInt(br.readLine().trim());
@@ -82,8 +85,12 @@ public class pblm2383 {
             // }
             Deque<Integer> group1 = new ArrayDeque<>();
             Deque<Integer> group2 = new ArrayDeque<>();
+            bestAnswer = Integer.MAX_VALUE;
             makeGroup(0, group1, group2 );
+
+            sb.append('#').append(testCase).append(' ').append(bestAnswer).append('\n');
         }
+        System.out.print(sb.toString());
     }
 
     
@@ -99,20 +106,65 @@ public class pblm2383 {
         group1.pollLast();
 
         // 2번계단 선택
-        group2.offer(peopleArray[selectIndex][0]);
+        group2.offer(peopleArray[selectIndex][1]);
         makeGroup(selectIndex+1, group1, group2);
         group2.pollLast();
     }
 
-    public static void simulation(Deque<Integer> group1, Deque<Integer> group2){
-        
-        //  * 6. 시뮬레이션은 1분마다 진행, stairQueue, floorQueue 가 존재
-        //  *  6-1. 1분마다, stairQueue 에 있는값 -1
-        //  *      6-1-1. starirQueue 에 있는값에서 0인게 있으면 빼고 peopleCnt +1
-        //  *  6-2. 1분마다, floorQueue 있는거 전부다 -1, 0 됐으면 stairQueue 에 넣기
-        int time = 0;
-        Deque<Integer> stairQueue = new ArrayDeque<>();
-        Deque<Integer> floorDeque = new ArrayDeque<>();
-        
+    public static void simulation(Deque<Integer> group1, Deque<Integer> group2) {
+        // 계단 길이를 받아와서,
+        final int stairLen1 = stairInfoList.get(0)[2];
+        final int stairLen2 = stairInfoList.get(1)[2];
+
+        // 도착시간 리스트로 변환하고 정렬
+        List<Integer> arrival1 = new ArrayList<>(group1);
+        List<Integer> arrival2 = new ArrayList<>(group2);
+        Collections.sort(arrival1);
+        Collections.sort(arrival2);
+
+        int finish1 = simulateOneStair(arrival1, stairLen1);
+        int finish2 = simulateOneStair(arrival2, stairLen2);
+
+        // 조합 한번 끝날때마다 최솟값 갱신을 하자. 
+        int tmpTime = Math.max(finish1, finish2);
+        if (tmpTime < bestAnswer) bestAnswer = tmpTime;
+    }
+
+    
+    private static int simulateOneStair(List<Integer> arrivals, int stairLen) {
+        if (arrivals.isEmpty()) return 0;
+
+        // 현재 계단 위에 있는 사람들의 끝나는 시간들 저장 
+        PriorityQueue<Integer> stairQueue = new PriorityQueue<>();
+
+        int lastFinishTime = 0;
+
+        // 계단 이용한사람들 보면서,
+        for (int arrivalTime : arrivals) {
+            int startCandidate = arrivalTime + 1;
+
+            // startCandidate 시점 이전/동시에 끝난 사람들 제거
+            while (!stairQueue.isEmpty() && stairQueue.peek() <= startCandidate) {
+                stairQueue.poll();
+            }
+
+            if (stairQueue.size() < 3) {
+                // 계단에 있는사람 3명보다 작을때 
+                // 끝나는 시점을 계산해서
+                int endTime = startCandidate + stairLen;
+                stairQueue.offer(endTime);
+                if (endTime > lastFinishTime) lastFinishTime = endTime;
+            } else {
+                // 계단에 있는사람 3명보다 클때
+                // 가장 먼저 끝나는 시간까지 대기 하고
+                int earliestEnd = stairQueue.poll(); 
+                int startTime = earliestEnd;        
+                int endTime = startTime + stairLen;
+                stairQueue.offer(endTime);
+                if (endTime > lastFinishTime) lastFinishTime = endTime;
+            }
+        }
+
+        return lastFinishTime;
     }
 }
